@@ -1,0 +1,71 @@
+rules_version = '2';
+
+// Vault Board security rules.
+// Authorization lives HERE, not in the Flutter UI.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function validText(t) {
+      return t is string && t.size() > 0 && t.size() <= 500;
+    }
+
+    // Private user record: written once by its owner at registration.
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+
+      allow create: if isOwner(uid)
+        && request.resource.data.keys().hasOnly(
+             ['uid', 'firstName', 'lastName', 'role', 'registrationDateTime'])
+        && request.resource.data.keys().hasAll(
+             ['uid', 'firstName', 'lastName', 'role', 'registrationDateTime'])
+        && request.resource.data.uid == uid
+        && request.resource.data.firstName is string
+        && request.resource.data.lastName is string
+        && request.resource.data.role in ['student', 'instructor', 'guest']
+        && request.resource.data.registrationDateTime == request.time;
+
+      // The record is immutable from the client. role is descriptive only.
+      allow update, delete: if false;
+
+      // Private per-user prefs (reserved for the notification opt-in).
+      match /prefs/{docId} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // Public board: any signed-in user reads; only the author writes.
+    match /messages/{msgId} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(
+             ['text', 'authorUid', 'authorName', 'createdAt', 'editedAt'])
+        && request.resource.data.authorUid == request.auth.uid
+        && validText(request.resource.data.text)
+        && request.resource.data.authorName is string
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.get('editedAt', null) == null;
+
+      allow update: if isOwner(resource.data.authorUid)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['text', 'editedAt'])
+        && validText(request.resource.data.text)
+        && request.resource.data.editedAt == request.time;
+
+      allow delete: if isOwner(resource.data.authorUid);
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
