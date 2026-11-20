@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "844087069309",
+    "project_id": "hw2-vault-board",
+    "storage_bucket": "hw2-vault-board.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844087069309:android:fbcc507ce5ee7b162b7f14",
+        "android_client_info": {
+          "package_name": "edu.gsu.hw2.message_board"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3FeWukncdJ2P87RZOwuV_r3CgpXYd1LQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
