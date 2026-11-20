@@ -33,16 +33,11 @@ Set-Content $gradle.FullName $g -NoNewline
 Write-Host "== 4. Dependencies ==" -ForegroundColor Cyan
 flutter pub get
 
-Write-Host "== 5. Firebase CLI + FlutterFire ==" -ForegroundColor Cyan
-if (-not (Get-Command firebase -ErrorAction SilentlyContinue)) { npm install -g firebase-tools }
-dart pub global activate flutterfire_cli
-firebase login
-# Pick your project, select ONLY android. This overwrites lib/firebase_options.dart.
-dart pub global run flutterfire_cli:flutterfire configure --platforms=android
-
-Write-Host "== 6. Deploy security rules ==" -ForegroundColor Cyan
-firebase use --add
-firebase deploy --only firestore:rules
+Write-Host "== 5. Firebase config (project hw2-vault-board, already set up) ==" -ForegroundColor Cyan
+# lib/firebase_options.dart is committed for project hw2-vault-board.
+Copy-Item google-services.json android\app\google-services.json -Force
+# Rules are already published. To redeploy after edits:
+#   npm install -g firebase-tools; firebase login; firebase deploy --only firestore:rules
 
 Write-Host "== 7. Analyze + build release APK ==" -ForegroundColor Cyan
 flutter analyze

@@ -77,7 +77,9 @@ cd HW_2
 powershell -ExecutionPolicy Bypass -File scripts\setup.ps1
 ```
 
-The script generates the Android folder (`flutter create .`), adds the `INTERNET` permission to the release manifest, sets `minSdk 23`, runs `flutter pub get`, logs into Firebase, runs `flutterfire configure` (choose your project, Android only), deploys the rules, and builds the release APK.
+The script generates the Android folder (`flutter create .`), adds the `INTERNET` permission to the release manifest, sets `minSdk 23`, runs `flutter pub get`, copies `google-services.json`, and builds the release APK.
+
+**Firebase project:** `hw2-vault-board` (Email/Password sign in enabled, Cloud Firestore in `nam5`, rules from `firestore.rules` published, Android app `edu.gsu.hw2.message_board` registered). `lib/firebase_options.dart` is already configured for it. To use your own project instead, run `flutterfire configure --platforms=android` and `firebase deploy --only firestore:rules`.
 
 Manual equivalent:
 
@@ -91,7 +93,7 @@ firebase deploy --only firestore:rules
 flutter run
 ```
 
-`lib/firebase_options.dart` in the repo is a placeholder; `flutterfire configure` generates the real one. Firebase client config is not a secret, but no passwords, tokens, keystores or service account keys are committed.
+Firebase client config is not a secret, but no passwords, tokens, keystores or service account keys are committed.
 
 ## Run and test
 
