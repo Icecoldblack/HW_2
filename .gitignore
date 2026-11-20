@@ -1,0 +1,29 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+.idea/
+.vscode/
+
+# Android
+android/.gradle/
+android/local.properties
+android/key.properties
+*.jks
+*.keystore
+
+# Node (rules tests)
+node_modules/
+rules-tests/node_modules/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Secrets: never commit
+service-account*.json
+.env
